@@ -2,7 +2,7 @@
 
 TVBox / 影视仓 用的独立爬虫工程。纯 Java 编写、零第三方依赖，编译产物是一个内含 `classes.dex` 的 `spider.jar`，可直接被宿主用 `DexClassLoader` 加载。
 
-当前配置版本 **v29**，包含 10 个站点（含 1 个聚合站）。在tvbox放入接口https://ghproxy.net/https://raw.githubusercontent.com/gongchuang1089/CatVodSpider-standalone/refs/heads/main/tv.json即可使用。
+当前配置版本 **v29**，包含 10 个站点（含 1 个聚合站）。在tvbox放入接口https://ghproxy.net/https://raw.githubusercontent.com/gongchuang1089/CatVodSpider-standalone/refs/heads/main/tv.json 即可使用。
 
 ## 特性
 
