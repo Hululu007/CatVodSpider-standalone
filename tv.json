@@ -1,0 +1,100 @@
+{
+  "version": 29,
+  "name": "共创影视",
+  "spider": "https://gitee.com/gongchuang666/tvbox/raw/master/spider.jar?v=29;md5;d1f480d883c392767c3c4da831e495eb",
+  "sites": [
+    {
+      "key": "k4k",
+      "name": "4K",
+      "type": 3,
+      "api": "csp_Kfourkvm",
+      "searchable": 1,
+      "quickSearch": 1,
+      "filterable": 1,
+      "ext": "{\"quality\":\"auto\"}"
+    },
+    {
+      "key": "agg",
+      "name": "聚合",
+      "type": 3,
+      "api": "csp_MacAgg",
+      "searchable": 1,
+      "quickSearch": 1,
+      "filterable": 0,
+      "ext": "{\"timeout\":8000}"
+    },
+    {
+      "key": "qinghuaci",
+      "name": "青花（1k秒播放）",
+      "type": 3,
+      "api": "csp_Qinghuaci",
+      "searchable": 1,
+      "quickSearch": 1,
+      "filterable": 1,
+      "ext": "{\"aggregate\":false}"
+    },
+    {
+      "key": "czzy",
+      "name": "厂长资源",
+      "type": 3,
+      "api": "csp_Czzy",
+      "searchable": 1,
+      "quickSearch": 1,
+      "filterable": 1
+    },
+    {
+      "key": "bttwo",
+      "name": "两个BT",
+      "type": 3,
+      "api": "csp_Bttwo",
+      "searchable": 1,
+      "quickSearch": 1,
+      "filterable": 1
+    },
+    {
+      "key": "chabeihu",
+      "name": "茶杯狐",
+      "type": 3,
+      "api": "csp_Chabeihu",
+      "searchable": 1,
+      "quickSearch": 1,
+      "filterable": 0
+    },
+    {
+      "key": "sotvla",
+      "name": "SOTVLA",
+      "type": 3,
+      "api": "csp_Sotvla",
+      "searchable": 1,
+      "quickSearch": 1,
+      "filterable": 0
+    },
+    {
+      "key": "appmovie",
+      "name": "APP影院",
+      "type": 3,
+      "api": "csp_Appmovie",
+      "searchable": 1,
+      "quickSearch": 1,
+      "filterable": 1
+    },
+    {
+      "key": "xifanys",
+      "name": "稀饭影视",
+      "type": 3,
+      "api": "csp_Xifanys",
+      "searchable": 1,
+      "quickSearch": 1,
+      "filterable": 0
+    },
+    {
+      "key": "ppnix",
+      "name": "PPnix",
+      "type": 3,
+      "api": "csp_Ppnix",
+      "searchable": 1,
+      "quickSearch": 1,
+      "filterable": 0
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+# 构建产物
+/out/
+/dex/
+/testout/
+/classes.jar
+/sources.txt
+/dist/classes.dex
+
+# 调试输出
+*.log
+testbox.txt
+perf*.txt
+agg*.txt
+k4k*.txt
+share_out.txt
+
+# IDE
+.idea/
+*.iml
+.vscode/
