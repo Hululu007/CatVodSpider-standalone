@@ -1,7 +1,7 @@
 {
-  "version": 29,
+  "version": 30,
+  "spider": "https://ghproxy.net/https://github.com/gongchuang1089/CatVodSpider-standalone/raw/refs/heads/main/spider.jar?v=30;md5;a23caec4f2508ac08e90772e935eeec6",
   "name": "共创影视",
-  "spider": "https://ghproxy.net/https://github.com/gongchuang1089/CatVodSpider-standalone/raw/refs/heads/main/spider.jar?v=29;md5;d1f480d883c392767c3c4da831e495eb",
   "sites": [
     {
       "key": "k4k",

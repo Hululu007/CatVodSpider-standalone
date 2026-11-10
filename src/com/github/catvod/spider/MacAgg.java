@@ -66,16 +66,19 @@ public class MacAgg extends Spider {
 
     /** {站名, 接口, 是否启用} —— 顺序即线路顺序，按实测速度排 */
     private static final String[][] SITES = {
-            {"360资源", "https://360zy.com/api.php/provide/vod/", "1"},
-            {"暴风资源", "https://bfzyapi.com/api.php/provide/vod/", "1"},
-            {"非凡资源", "https://cj.ffzyapi.com/api.php/provide/vod/", "1"},
-            {"量子资源", "https://cj.lziapi.com/api.php/provide/vod/", "1"},
-            {"电影天堂", "https://caiji.dyttzyapi.com/api.php/provide/vod/", "1"},
-            {"光速资源", "https://api.guangsuapi.com/api.php/provide/vod/", "1"},
-            {"魔都资源", "https://www.mdzyapi.com/api.php/provide/vod/", "1"},
-            {"闪电资源", "https://sdzyapi.com/api.php/provide/vod/", "1"},
-            {"无尽资源", "https://api.wujinapi.me/api.php/provide/vod/", "1"},
-            {"百度资源", "https://api.apibdzy.com/api.php/provide/vod/", "1"}
+            {"360资源", "https://360zy.com/api.php/provide/vod/", "1", "0", ""},
+            {"暴风资源", "https://bfzyapi.com/api.php/provide/vod/", "1", "0", ""},
+            {"非凡资源", "https://cj.ffzyapi.com/api.php/provide/vod/", "1", "0", ""},
+            {"量子资源", "https://cj.lziapi.com/api.php/provide/vod/", "1", "0", ""},
+            {"电影天堂", "https://caiji.dyttzyapi.com/api.php/provide/vod/", "1", "0", ""},
+            {"光速资源", "https://api.guangsuapi.com/api.php/provide/vod/", "1", "0", ""},
+            {"魔都资源", "https://www.mdzyapi.com/api.php/provide/vod/", "1", "0", ""},
+            {"闪电资源", "https://sdzyapi.com/api.php/provide/vod/", "1", "0", ""},
+            {"无尽资源", "https://api.wujinapi.me/api.php/provide/vod/", "1", "0", ""},
+            {"百度资源", "https://api.apibdzy.com/api.php/provide/vod/", "1", "0", ""},
+            {"红牛资源", "https://yingshidaquan.top/api_proxy.php", "1", "1", "hongniu"},
+            {"速播资源", "https://yingshidaquan.top/api_proxy.php", "1", "1", "subo"},
+            {"金鹰资源", "https://yingshidaquan.top/api_proxy.php", "1", "1", "jinying"}
     };
 
     /** 首页/分类只走这一个源 */
@@ -454,7 +457,13 @@ public class MacAgg extends Spider {
 
     /** 单个源搜索，返回命中的那一条（含 play_url） */
     private JSONObject searchOne(String[] site, String wd, String key, int order) throws Exception {
-        String url = site[1] + "?ac=videolist&wd=" + wd;
+        String url;
+        if (site.length > 3 && "1".equals(site[3])) {
+            // 代理型源：{api}?do=search&wd=xx&source=yy
+            url = site[1] + "?do=search&wd=" + wd + "&source=" + site[4];
+        } else {
+            url = site[1] + "?ac=videolist&wd=" + wd;
+        }
         JSONObject data = fetchJson(url);
         JSONArray list = data.optJSONArray("list");
         if (list == null || list.length() == 0) return null;
