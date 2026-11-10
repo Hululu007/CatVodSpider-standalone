@@ -2,7 +2,11 @@
 
 TVBox / 影视仓 用的独立爬虫工程。纯 Java 编写、零第三方依赖，编译产物是一个内含 `classes.dex` 的 `spider.jar`，可直接被宿主用 `DexClassLoader` 加载。
 
-当前配置版本 **v29**，包含 10 个站点（含 1 个聚合站）。在tvbox放入接口https://ghproxy.net/https://raw.githubusercontent.com/gongchuang1089/CatVodSpider-standalone/refs/heads/main/tv.json 即可使用。
+当前配置版本 **v30**，包含 **5 个站点**。在 TVBox 里放入下面的接口即可使用：
+
+```
+https://ghproxy.net/https://raw.githubusercontent.com/gongchuang1089/CatVodSpider-standalone/refs/heads/main/tv.json
+```
 
 ## 特性
 
@@ -17,32 +21,13 @@ TVBox / 影视仓 用的独立爬虫工程。纯 Java 编写、零第三方依�
 
 | key | 名称 | 类 | 站点 | 覆盖 | 备注 |
 |---|---|---|---|---|---|
-| `k4k` | 4K | `Kfourkvm` | 4kvm.net | 全类型 + 4K | 与 bttwo 同源模板，HMAC 签名取流 |
-| `agg` | 聚合 | `MacAgg` | 10 个采集源 | 剧 / 综 / 漫 / 电影 | 一部剧多条线路，可切换源 |
-| `qinghuaci` | 青花（1k秒播放） | `Qinghuaci` | cj1nym.com | 全类型 | 自研 JSON API，`sha1(md5(...))` 签名 |
 | `czzy` | 厂长资源 | `Czzy` | 4kcz.com | 全类型 | WordPress + mibt，站前有雷池 WAF |
-| `bttwo` | 两个BT | `Bttwo` | bttwo.life | 全类型 | nbmovie 模板，HMAC + XOR 签名 |
-| `chabeihu` | 茶杯狐 | `Chabeihu` | chabeihu.com.cn | 全类型 | 苹果CMS，也被青花瓷作聚合线路调用 |
 | `sotvla` | SOTVLA | `Sotvla` | sotvla.cc | 全类型 | 聚合搜索站，播放交给第三方解析 |
 | `appmovie` | APP影院 | `Appmovie` | appmovie.art | 全类型 | 标准苹果CMS |
 | `xifanys` | 稀饭影视 | `Xifanys` | xifanys.com | 全类型 | 苹果CMS + mxtheme |
 | `ppnix` | PPnix | `Ppnix` | ppnix.com | 电影 / 剧 | 自建站，`/info/m3u8/{id}/{param}.m3u8` |
 
 > `Olevod.java`（欧乐影院）已编译进 jar 但未在 `tv.json` 中启用，需要时加一条站点配置即可。
-
-### 聚合站（`agg`）说明
-
-把 10 个苹果CMS 采集源合成同一个站点，进详情页后播放器里会出现多条线路，每条对应一个源：
-
-```
-360资源 · 暴风资源 · 非凡资源 · 量子资源 · 电影天堂
-光速资源 · 魔都资源 · 闪电资源 · 无尽资源 · 百度资源
-```
-
-- 顺序按实测响应速度排，最快的排第一，失败的源自动跳过
-- 并发用「渐进收集」：谁先返回先收谁，到预算时间就收工，慢站不拖累整体
-- 播放地址两种形态都处理：直链（`.m3u8`）直接返回；`share` 页则二次请求取 `var main="/...index.m3u8?sign=..."` 拼直链
-- 首页分类精简为 12 个常用分类，避免分类条过长
 
 ## 目录结构
 
@@ -51,7 +36,6 @@ TVBox / 影视仓 用的独立爬虫工程。纯 Java 编写、零第三方依�
 ├── build.bat                    一键构建脚本（编译 → dex → 打包 → 算 MD5 → 改 tv.json）
 ├── tv.json                      站点配置，供 TVBox 加载
 ├── spider.jar                   成品（含 classes.dex + .class）
-├── spider-old-*.jar             历史版本备份
 ├── dist/
 │   ├── spider.jar               构建输出，与根目录一致
 │   └── spider.jar.md5           MD5，与 tv.json 里的校验值对应
@@ -60,9 +44,12 @@ TVBox / 影视仓 用的独立爬虫工程。纯 Java 编写、零第三方依�
 │   └── spider/
 │       ├── Init.java            宿主加载 jar 时调用，弹 Toast 确认加载成功
 │       ├── Http.java            零依赖 HTTP 客户端
-│       ├── Kfourkvm.java        4K 站点
-│       ├── MacAgg.java          聚合站点
-│       └── ...                  其余站点
+│       ├── Czzy.java            厂长资源
+│       ├── Sotvla.java          SOTVLA
+│       ├── Appmovie.java        APP影院
+│       ├── Xifanys.java         稀饭影视
+│       ├── Ppnix.java           PPnix
+│       └── Olevod.java          欧乐影院（备选，默认未启用）
 └── test/                        调试用 main 类，每个站点一组
 ```
 
@@ -96,10 +83,10 @@ build.bat
 ### 手动构建（等价步骤）
 
 ```bash
-javac --release 8 -encoding UTF-8 -cp "$ANDROID_HOME/platforms/android-36/android.jar" \
+javac --release 8 -encoding UTF-8 -cp "$ANDROID_HOME/platforms/android-37.0/android.jar" \
       -d out $(find src -name '*.java')
 jar cf classes.jar -C out .
-d8 --release --min-api 21 --lib "$ANDROID_HOME/platforms/android-36/android.jar" \
+d8 --release --min-api 21 --lib "$ANDROID_HOME/platforms/android-37.0/android.jar" \
    --output dex classes.jar
 cp dex/classes.dex dist/
 jar cf dist/spider.jar -C dist classes.dex -C out .
@@ -112,35 +99,31 @@ rm dist/classes.dex
 
 ```json
 {
-  "version": 29,
+  "version": 30,
   "name": "共创影视",
-  "spider": "https://gitee.com/gongchuang666/tvbox/raw/master/spider.jar?v=29;md5;<32位MD5>",
+  "spider": "https://ghproxy.net/https://raw.githubusercontent.com/gongchuang1089/CatVodSpider-standalone/refs/heads/main/spider.jar?v=30;md5;<32位MD5>",
   "sites": [
     {
-      "key": "k4k",
-      "name": "4K",
+      "key": "czzy",
+      "name": "厂长资源",
       "type": 3,
-      "api": "csp_Kfourkvm",
+      "api": "csp_Czzy",
       "searchable": 1,
       "quickSearch": 1,
-      "filterable": 1,
-      "ext": "{\"quality\":\"auto\"}"
+      "filterable": 1
     }
   ]
 }
 ```
 
-- `spider` 后面的 `?v=29` 用于破缓存，`;md5;` 后面的值必须是 jar 的真实 MD5，否则部分宿主会拒绝加载
+- `spider` 后面的 `?v=30` 用于破缓存，`;md5;` 后面的值必须是 jar 的真实 MD5，否则部分宿主会拒绝加载
 - `type: 3` 表示 csp 类（jar 内爬虫）；`api: csp_<类名>` 对应 `com.github.catvod.spider.<类名>`
 
 ### 各站点 `ext` 参数
 
 | 站点 | ext 示例 | 说明 |
 |---|---|---|
-| `k4k` | `{"quality":"auto"}` | `auto` / `4k` / `1080` / `720`；`cookie` 可填 VIP 登录态解锁 4K |
-| `agg` | `{"timeout":8000}` | `timeout` 单源超时毫秒；`sources` 只启用指定源；`cookie` 透传 |
-| `qinghuaci` | `{"aggregate":false}` | `aggregate` 是否在详情里追加茶杯狐聚合线路 |
-| `czzy` / `bttwo` / `chabeihu` / `sotvla` / `appmovie` / `xifanys` / `ppnix` | `{"host":"https://..."}` | 统一支持用 `host` 覆盖站点域名，站点换域名时不用改代码 |
+| `czzy` / `sotvla` / `appmovie` / `xifanys` / `ppnix` | `{"host":"https://..."}` | 统一支持用 `host` 覆盖站点域名，站点换域名时不用改代码 |
 
 `ext` 也支持直接传字符串形式的 host：`"ext": "https://www.example.com"`。
 
@@ -153,28 +136,18 @@ rm dist/classes.dex
 如果 `tv.json` 里的 `spider` 指向 GitHub，地址形如：
 
 ```
-https://raw.githubusercontent.com/gongchuang1089/CatVodSpider-standalone/main/spider.jar?v=29;md5;<MD5>
+https://raw.githubusercontent.com/gongchuang1089/CatVodSpider-standalone/main/spider.jar?v=30;md5;<MD5>
 ```
 
 ## 各站点技术要点
 
-### 4K（4kvm.net）
+### 欧乐影院（Olevod）
 
-与 `bttwo.life` 同源，都是 nbmovie 模板。详情页带 `id="nb-st"`（服务器时间戳）和 `userlink:'...'`，播放地址由 WASM 生成：
+官方接口带 `_vv` 参数，是对秒级时间戳做的位混淆：取 `md5(ts)` 的片段，与 `ts` 每个字符的二进制位交叉拼接成 hex3。只取 `vip=false` 的免费直链，因此不进网页播放器，也就没有广告。
 
-```
-GET /video/play?p={dataid}&v={slug}&q={quality}&s={sign}&t={ts}&k={token}
-sign  = HMAC-SHA256(key=slug, msg="dataid:ts:slug") 前 32 位小写 hex
-token = base64( XOR(userlink, "nbmovie2024secretkey") )
-ts    = 当前毫秒时间戳 + (本地时间 - nb-st)
-```
+### 苹果CMS 类站点（Appmovie / Xifanys / Czzy 等）
 
-- 服务端对 `q=4k` 返回 403（仅客户端），所以统一用 `q=1080` 拉全量 `quality_urls`，再按 `bitrate` 从高到低挑
-- 4K / 1080p 档在未登录时是 `isvip=true, locked=true, url="1"`，只有 720p 免费；填 VIP 的 `cookie` 后自动解锁
-
-### 聚合（MacAgg）
-
-10 个源统一走苹果CMS 采集接口：
+统一走采集接口：
 
 ```
 列表  {api}?ac=videolist&t={type_id}&pg={page}
@@ -182,27 +155,15 @@ ts    = 当前毫秒时间戳 + (本地时间 - nb-st)
 详情  {api}?ac=detail&ids={vod_id}
 ```
 
-`vod_play_url` 格式是 `第1集$地址#第2集$地址`，多线路用 `$$$` 分隔。每个源只取一组（优先直链组），保证线路名就是站名。
-
-### 青花瓷（Qinghuaci）
-
-```
-sign = sha1( md5( 参数按 key 排序拼成 k=v& ... + "key=<SIGN_KEY>&t=<ts>" ) )
-```
-
-把 `sign` 和 `t` 放在请求头。HTTPS 握手失败会自动降级 HTTP，兼容安卓 6 这类信任库较旧的设备。
-
-### 欧乐影院（Olevod）
-
-官方接口带 `_vv` 参数，是对秒级时间戳做的位混淆：取 `md5(ts)` 的片段，与 `ts` 每个字符的二进制位交叉拼接成 hex3。只取 `vip=false` 的免费直链，因此不进网页播放器，也就没有广告。
+`vod_play_url` 格式是 `第1集$地址#第2集$地址`，多线路用 `$$$` 分隔。
 
 ## 调试
 
 `test/` 下每个站点有对应的 `Test*.java`，都是带 `main` 的普通类，直接用 JVM 跑：
 
 ```bash
-javac -encoding UTF-8 -cp "out;android.jar;json-20250517.jar" -d testout test/TestMacAgg.java
-java -Dfile.encoding=UTF-8 -cp "out;testout;json-20250517.jar" TestMacAgg
+javac -encoding UTF-8 -cp "out;android.jar;json-20250517.jar" -d testout test/TestCzzy.java
+java -Dfile.encoding=UTF-8 -cp "out;testout;json-20250517.jar" TestCzzy
 ```
 
 注意：`android.jar` 里的 `org.json` 是空壳实现，运行期必须换成真正的 `org.json` jar（例如 `json-20250517.jar`），否则会抛 `Stub!`。
@@ -221,6 +182,7 @@ java -Dfile.encoding=UTF-8 -cp "out;testout;json-20250517.jar" TestMacAgg
 
 | 版本 | 内容 |
 |---|---|
+| v30 | **移除 4K / 聚合 / 青花 / 两个BT / 茶杯狐 五个接口**，jar 体积从 181 KB 降到 85 KB，仅保留 5 个站点 |
 | v29 | 修复 `vod_id` 含竖线导致搜索结果被宿主丢弃；聚合分类由 40+ 精简到 12 个；线路顺序按配置固定 |
 | v28 | 4K 线路性能优化：gzip、页面/播放/搜索三级缓存、DNS 预热、首分片预取 |
 | v27 | 新增聚合站 `agg`（10 个采集源多线路） |
