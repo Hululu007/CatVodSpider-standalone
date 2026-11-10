@@ -1,38 +1,8 @@
 {
   "version": 30,
-  "spider": "https://ghproxy.net/https://github.com/gongchuang1089/CatVodSpider-standalone/raw/refs/heads/main/spider.jar?v=30;md5;a23caec4f2508ac08e90772e935eeec6",
+  "spider": "https://ghproxy.net/https://github.com/gongchuang1089/CatVodSpider-standalone/raw/refs/heads/main/spider.jar?v=30;md5;28e898c69cca007195b0de5c09a30429",
   "name": "共创影视",
   "sites": [
-    {
-      "key": "k4k",
-      "name": "4K",
-      "type": 3,
-      "api": "csp_Kfourkvm",
-      "searchable": 1,
-      "quickSearch": 1,
-      "filterable": 1,
-      "ext": "{\"quality\":\"auto\"}"
-    },
-    {
-      "key": "agg",
-      "name": "聚合",
-      "type": 3,
-      "api": "csp_MacAgg",
-      "searchable": 1,
-      "quickSearch": 1,
-      "filterable": 0,
-      "ext": "{\"timeout\":8000}"
-    },
-    {
-      "key": "qinghuaci",
-      "name": "青花（1k秒播放）",
-      "type": 3,
-      "api": "csp_Qinghuaci",
-      "searchable": 1,
-      "quickSearch": 1,
-      "filterable": 1,
-      "ext": "{\"aggregate\":false}"
-    },
     {
       "key": "czzy",
       "name": "厂长资源",
@@ -41,24 +11,6 @@
       "searchable": 1,
       "quickSearch": 1,
       "filterable": 1
-    },
-    {
-      "key": "bttwo",
-      "name": "两个BT",
-      "type": 3,
-      "api": "csp_Bttwo",
-      "searchable": 1,
-      "quickSearch": 1,
-      "filterable": 1
-    },
-    {
-      "key": "chabeihu",
-      "name": "茶杯狐",
-      "type": 3,
-      "api": "csp_Chabeihu",
-      "searchable": 1,
-      "quickSearch": 1,
-      "filterable": 0
     },
     {
       "key": "sotvla",
